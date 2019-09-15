@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Rango</title>
+</head>
+<body>
+<h1>小闺蜜说...</h1>
+<div>
+    我喜欢的食物是 <br />
+    <strong>{{ boldmessage }}</strong><br />
+</div>
+<div>
+    <a href="/rango/about/">About</a><br />
+    <img src="{% static "image/0.jpg" %}" alt="天空的图片"/>
+</div>
+</body>
+</html>
