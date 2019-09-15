@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Rango</title>
+
+<body>
+<div>
+    {% if category %}
+        <h1>{{category.name}}</h1>
+        {% if pages %}
+    <ul>
+        {% for page in pages %}
+            <li><a href="{{page.url}}">{{page.title}}</a></li>
+        {% endfor %}
+    </ul>
+        {%else%}
+            <strong>没有这个页面</strong>
+        {%endif%}
+    {% else %}
+        <strong>没有这个分类</strong>
+    {% endif %}
+</div>
+
+<div>
+    <a href="/rango/">返回</a>
+</div>
+</body>
+</html>

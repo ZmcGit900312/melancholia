@@ -6,14 +6,41 @@
     <title>Rango</title>
 </head>
 <body>
-<h1>小闺蜜说...</h1>
+    <h1>小闺蜜说...</h1>
+    <strong>我最爱的分类</strong>
+    <div>
+    {% if categories %}
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <a href="/rango/category/{{ category.slug }}">{{category.name}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>没有找到分类</strong>
+    {% endif %}
+    </div>
+
+
+    <strong>我最爱的网页</strong>
+    <div>
+    {% if pages %}
+        <ul>
+            {% for page in pages %}
+                <li>
+                    <a href="{{ page.url }}">{{page.title}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>没有找到网页</strong>
+    {% endif %}
+    </div>
+
 <div>
-    我喜欢的食物是 <br />
-    <strong>{{ boldmessage }}</strong><br />
-</div>
-<div>
-    <a href="/rango/about/">About</a><br />
-    <img src="{% static "image/0.jpg" %}" alt="天空的图片"/>
+    <a href="/rango/about/">关于小闺蜜</a><br />
+    <img src="{% static "image/妹妹君.jpg" %}" alt="天空的图片"/>
 </div>
 </body>
 </html>
