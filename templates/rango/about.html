@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
-<h1>关于我喜欢的小闺蜜</h1>
-<a href='/rango/'>我爱小闺蜜</a>
-<a href='/'>我不爱小闺蜜</a>
-<div>
-    <img src="{{ MEDIA_URL }}niko.jpg" alt="小闺蜜的照片"/>
-</div>
+{% extends 'rango/base.html' %}
 
-</body>
-</html>
+{% block title_block %}
+    靓照
+{% endblock %}
+
+{% block body_block %}
+    <h1>关于我喜欢的小闺蜜</h1>
+    <img src="{{ MEDIA_URL }}niko.jpg" alt="小闺蜜的照片"/>
+{% endblock %}

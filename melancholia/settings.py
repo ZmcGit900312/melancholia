@@ -70,6 +70,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
             ],
+
+            'libraries': {
+                'rango_template_tags':'rango.templatetags.rango_template_tags',
+            }
         },
     },
 ]
