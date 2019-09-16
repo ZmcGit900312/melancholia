@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rango.models import Category, Page
-from rango.forms import CategoryForm,PageForm
+from rango.forms import CategoryForm, PageForm
+from rango.forms import UserForm, UserProfileForm
 
 
 def index(request):
@@ -47,28 +48,30 @@ def show_category(request, category_name_slug):
         # 渲染响应，返回给客户端
     return render(request, 'rango/category.html', context_dict)
 
+
 def add_category(request):
     form = CategoryForm()
 
     # 是HTTP POST 请求吗？
     if request.method == 'POST':
-        form = CategoryForm(request.POST)#Django 2.0 change
+        form = CategoryForm(request.POST)  # Django 2.0 change
 
         if form.is_valid():
-            cat=form.save(commit=True)
-            print(cat,cat.slug)
+            cat = form.save(commit=True)
+            print(cat, cat.slug)
             return index(request)
         else:
             print(form.errors)
 
     # 渲染表单，并显示可能出现的错误消息
-    return render(request,'rango/add_category.html',{'form':form})
+    return render(request, 'rango/add_category.html', {'form': form})
 
-def add_page(request,category_name_slug):
+
+def add_page(request, category_name_slug):
     try:
-        category =  Category.objects.get(slug=category_name_slug)
+        category = Category.objects.get(slug=category_name_slug)
     except Category.DoesNotExist:
-        category= None
+        category = None
 
     form = PageForm()
 
@@ -77,13 +80,50 @@ def add_page(request,category_name_slug):
 
         if form.is_valid():
             if category:
-                page= form.save(commit=False)
-                page.category=category
-                page.view=0
+                page = form.save(commit=False)
+                page.category = category
+                page.view = 0
                 page.save()
-                return show_category(request,category_name_slug)
+                return show_category(request, category_name_slug)
         else:
             print(form.errors)
 
-    context_dict = {'form':form, 'category':category}
-    return render(request,'rango/add_page.html',context_dict)
+    context_dict = {'form': form, 'category': category}
+    return render(request, 'rango/add_page.html', context_dict)
+
+
+# user register
+def register(request):
+    # register flag
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            # calculate password
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            registered = True
+
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request, 'rango/register.html',
+                  dict(user_form=user_form,
+                       profile_form=profile_form,
+                       registered=registered))

@@ -1,0 +1,23 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    注册
+{% endblock %}
+
+{% block body_block %}
+    <h1>注册成为好闺蜜</h1>
+    {% if registered %}
+        <strong>欢迎成为我的一个好闺蜜！</strong>
+    {% else %}
+        <strong>请成为我的好闺蜜吧！</strong>
+        <form id="user_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+
+        <input type="submit" name="submit" value="加入"/>
+        </form>
+    {% endif %}
+{% endblock %}
