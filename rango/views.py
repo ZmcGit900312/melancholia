@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm
 from rango.forms import UserForm, UserProfileForm
@@ -127,3 +131,32 @@ def register(request):
                   dict(user_form=user_form,
                        profile_form=profile_form,
                        registered=registered))
+
+
+def user_login(request):
+    if request.method == 'POST':
+        # Get username and password
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse('还没有成为好闺蜜呢')
+        else:
+            print("无法进入：{0},{1}".format(username, password))
+            return HttpResponse("无效的指令")
+    else:
+        return render(request, 'rango/login.html', {})
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're logged in, you can see it!")
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('index'))

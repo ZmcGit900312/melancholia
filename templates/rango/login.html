@@ -1,0 +1,21 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    登录
+{% endblock %}
+
+{% block body_block %}
+    <h1>进入闺蜜坊</h1>
+    <form id="'login_form" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <label>
+            用户名：
+            <input type="text" name="username" value="" size="50"/>
+            <br/>
+            密码：<input type="password" name="password" value="" size="50"/>
+            <br/>
+        </label>
+        <input type="submit" value="进入"/>
+    </form>
+{% endblock %}

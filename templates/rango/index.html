@@ -2,11 +2,16 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    主页
+        主页
 {% endblock %}
 
 {% block body_block %}
-    <h1>小闺蜜说...</h1>
+    {% if user.is_authenticated %}
+        <h1>欢迎您：{{ user.username }}！</h1>
+    {% else %}
+        <h1>小闺蜜说...</h1>
+    {% endif %}
+
     <strong>我最爱的分类</strong>
     <div>
     {% if categories %}
