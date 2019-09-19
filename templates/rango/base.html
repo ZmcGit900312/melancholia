@@ -28,10 +28,10 @@
 <hr/>
 <div>
     <ul>
-        <li><a href="{% url 'add_category' %}">添加化妆包</a> </li>
         <li><a href="{% url 'about' %}">关于小闺蜜</a></li>
         <li><a href="{% url 'index' %}">闺蜜坊</a></li>
         {% if user.is_authenticated %}
+            <li><a href="{% url 'add_category' %}">添加化妆包</a> </li>
             <li><a href="{% url 'restricted' %}">限制页面</a></li>
             <li><a href="{% url 'logout' %}">退出我的闺蜜坊</a></li>
             {% else %}

@@ -18,8 +18,11 @@
         {%else%}
             <strong>还没有添加呢</strong>
         {%endif%}
-        <hr/>
-         <a href="{% url 'add_page' category.slug %}">添加网页</a><br/>
+        {% if user.is_authenticated %}
+            <hr/>
+            <a href="{% url 'add_page' category.slug %}">添加网页</a><br/>
+        {% endif %}
+
     {% else %}
         <strong>没有这个分类</strong>
     {% endif %}
