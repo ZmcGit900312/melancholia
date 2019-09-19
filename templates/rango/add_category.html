@@ -5,20 +5,27 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>添加分类</h1>
-<div>
-    <form id="category_form" method="post" action="{% url 'add_category' %}">
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
+    {% if category %}
+        <form role="form" id="category_form" method="post" action="{% url 'add_category' %}">
+            <h2 class="form-signin-heading">添加新分类
+                <a href="{% url 'add_category' %}">{{ category.name }}</a>
+            </h2>
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
             {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
+            {{ field.help_text }}<br/>
+            {{ field }}<br/>
         {% endfor %}
-        <input type="submit" name="submit" value="添加"/>
-    </form>
-</div>
+        <br/>
+        <button class="btn btn-primary" type="submit" name="添加">
+            添加
+        </button>
+        </form>
+    {% else%}
+        <p>这个分类还不存在</p>
+    {% endif %}
 
 {% endblock %}

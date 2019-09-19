@@ -6,43 +6,48 @@
 {% endblock %}
 
 {% block body_block %}
-    {% if user.is_authenticated %}
-        <h1>欢迎您：{{ user.username }}！</h1>
-    {% else %}
-        <h1>小闺蜜说...</h1>
-    {% endif %}
-
-    <strong>我最爱的分类</strong>
-    <div>
-    {% if categories %}
-        <ul>
-            {% for category in categories %}
-                <li>
-                    <a href="{% url 'show_category' category.slug %}">{{category.name}}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <q>没有找到分类</q>
-    {% endif %}
+    <div class="jumbotron">
+        <h1 class="display-3">小闺蜜说...</h1>
+        {% if user.is_authenticated %}
+            <p class="lead">欢迎您：{{ user.username }}！</p>
+        {% else %}
+            <p class="lead">我想让你，成为我的好闺蜜！</p>
+            <p><a class="btn btn-lg btn-success" href="{% url 'registration_register' %}" role="button">在这里成为好闺蜜</a></p>
+        {% endif %}
     </div>
 
-    <strong>我最爱的网页</strong>
-    <div>
-    {% if pages %}
-        <ul>
-            {% for page in pages %}
-                <li>
-                    <a href="{{ page.url }}">{{page.title}}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <q>没有找到网页</q>
-    {% endif %}
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>我最爱的分类</h4>
+            <p>
+            {% if categories %}
+                  <ul class="list-group">
+                      {% for category in categories %}
+                          <li class="list-group-item"><a href="{% url 'show_category' category.slug %}">{{category.name}}</a></li>
+                      {% endfor %}
+                  </ul>
+              {% else %}
+                  <q>没有找到分类</q>
+              {% endif %}
+        </div>
+
+        <div class="col-lg-6">
+          <h4>我最爱的网页</h4>
+          <p>{% if pages %}
+              <ul class="list-group">
+                  {% for page in pages %}
+                      <li class="list-group-item"><a href="{{ page.url }}">{{page.title}}</a></li>
+                  {% endfor %}
+              </ul>
+          {% else %}
+              <q>没有找到网页</q>
+          {% endif %}
+        </div>
     </div>
-    <div>
-        <img src="{% static "image/妹妹君.jpg" %}" alt="可爱小闺蜜的图片"/><br/>
-        <a href="/admin/">管理站点</a>
-    </div>
+     <img src="{% static "image/妹妹君.jpg" %}" alt="可爱小闺蜜的图片"/><br/>
+
+    <hr>
+        <p>上次访问时间: {{ last_visit }}</p>
+        <p>访问次数: {{visits}}</p>
 {% endblock %}

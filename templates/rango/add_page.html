@@ -5,19 +5,26 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>添加网页</h1>
-<div>
-    <form id="page_form" method="post" action="{% url 'add_page' category.slug%}">
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
+    {% if category %}
+        <form role="form" id="page_form" method="post" action="{% url 'add_page' category.slug%}">
+            <h2 class="form-signin-heading">添加到
+                <a href="{% url 'add_page' category.slug%}">{{ category.name }}</a>
+            </h2>
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
             {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
+            {{ field.help_text }}<br/>
+            {{ field }}<br/>
         {% endfor %}
-        <input type="submit" name="submit" value="添加"/>
-    </form>
-</div>
+        <br/>
+        <button class="btn btn-primary" type="submit" name="submit">
+            添加
+        </button>
+        </form>
+    {% else%}
+        <p>这个页面还不存在</p>
+    {% endif %}
 {% endblock %}

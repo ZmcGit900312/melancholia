@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from datetime import datetime
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm
 from rango.forms import UserForm, UserProfileForm
@@ -14,7 +15,12 @@ def index(request):
 
     context_dict = dict(categories=category_list,
                         pages=page_list)
-    return render(request, 'rango/index.html', context=context_dict)
+
+    visitor_cookie_handler(request)
+    context_dict['visits']= request.session['visits']
+    context_dict['last_visit']= request.session['last_visit']
+    response = render(request, 'rango/index.html', context=context_dict)
+    return response
 
 
 def about(request):
@@ -96,62 +102,62 @@ def add_page(request, category_name_slug):
     return render(request, 'rango/add_page.html', context_dict)
 
 
-# user register
-def register(request):
-    # register flag
-    registered = False
+# # user register
+# def register(request):
+#     # register flag
+#     registered = False
+#
+#     if request.method == 'POST':
+#         user_form = UserForm(data=request.POST)
+#         profile_form = UserProfileForm(data=request.POST)
+#
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user = user_form.save()
+#             # calculate password
+#             user.set_password(user.password)
+#             user.save()
+#
+#             profile = profile_form.save(commit=False)
+#             profile.user = user
+#
+#             if 'picture' in request.FILES:
+#                 profile.picture = request.FILES['picture']
+#
+#             profile.save()
+#
+#             registered = True
+#
+#         else:
+#             print(user_form.errors, profile_form.errors)
+#     else:
+#         user_form = UserForm()
+#         profile_form = UserProfileForm()
+#
+#     return render(request, 'rango/register.html',
+#                   dict(user_form=user_form,
+#                        profile_form=profile_form,
+#                        registered=registered))
 
-    if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(data=request.POST)
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            # calculate password
-            user.set_password(user.password)
-            user.save()
-
-            profile = profile_form.save(commit=False)
-            profile.user = user
-
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-
-            profile.save()
-
-            registered = True
-
-        else:
-            print(user_form.errors, profile_form.errors)
-    else:
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-
-    return render(request, 'rango/register.html',
-                  dict(user_form=user_form,
-                       profile_form=profile_form,
-                       registered=registered))
-
-
-def user_login(request):
-    if request.method == 'POST':
-        # Get username and password
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(username=username, password=password)
-
-        if user:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                return HttpResponse('还没有成为好闺蜜呢')
-        else:
-            print("无法进入：{0},{1}".format(username, password))
-            return HttpResponse("无效的指令")
-    else:
-        return render(request, 'rango/login.html', {})
+# def user_login(request):
+#     if request.method == 'POST':
+#         # Get username and password
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#
+#         user = authenticate(username=username, password=password)
+#
+#         if user:
+#             if user.is_active:
+#                 login(request, user)
+#                 return HttpResponseRedirect(reverse('index'))
+#             else:
+#                 return HttpResponse('还没有成为好闺蜜呢')
+#         else:
+#             print("无法进入：{0},{1}".format(username, password))
+#             return HttpResponse("用户名或者密码不存在")
+#     else:
+#         return render(request, 'rango/login.html', {})
 
 
 @login_required
@@ -159,6 +165,27 @@ def restricted(request):
     return render(request,'rango/restricted.html',{})
 
 
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('index'))
+# def user_logout(request):
+#     logout(request)
+#     return HttpResponseRedirect(reverse('index'))
+
+def get_server_side_cookie(request,cookie,default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request,'visits','1'))
+
+    last_visit_cookie = get_server_side_cookie(request,'last_visit',str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
+                                        '%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now()-last_visit_time).seconds>0:
+        visits = visits+1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+
+    request.session['visits'] = visits
