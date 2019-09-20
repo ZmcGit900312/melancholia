@@ -9,4 +9,5 @@ urlpatterns = [
     re_path('category/(?P<category_name_slug>[\w\-]+)/',
             views.show_category,name = 'show_category'),
     path('restricted/',views.restricted,name='restricted'),
+    path('goto/',views.track_url,name='goto'),
 ]

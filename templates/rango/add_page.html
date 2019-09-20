@@ -1,14 +1,16 @@
 {% extends 'rango/base.html' %}
-
+{% load staticfiles %}
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
 {% block title_block %}
     采购中
 {% endblock %}
 
 {% block body_block %}
+    <div class="jumbotron">
     {% if category %}
         <form role="form" id="page_form" method="post" action="{% url 'add_page' category.slug%}">
-            <h2 class="form-signin-heading">添加到
-                <a href="{% url 'add_page' category.slug%}">{{ category.name }}</a>
+            <h2 class="show">添加网页到
+                <a href="{% url 'show_category' category.slug%}">{{ category.name }}</a>
             </h2>
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
@@ -27,4 +29,5 @@
     {% else%}
         <p>这个页面还不存在</p>
     {% endif %}
+    </div>
 {% endblock %}

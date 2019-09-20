@@ -1,48 +1,3 @@
-{% comment %}
-<!DOCTYPE html>
-{% load rango_template_tags %}
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>
-        闺蜜坊-
-        {% block title_block %}
-            来装饰我们的家吧
-        {% endblock %}
-    </title>
-</head>
-<body>
-
-<!-- 侧边栏-->
-<div>
-    {% block sidebar_block %}
-        {% get_category_list %}
-    {% endblock %}
-</div>
-
-<!-- 具体内容-->
-<div>
-    {% block body_block %}
-        小闺蜜是最最可爱的女孩子
-    {% endblock %}
-</div>
-<hr/>
-<div>
-    <ul>
-        <li><a href="{% url 'about' %}">关于小闺蜜</a></li>
-        <li><a href="{% url 'index' %}">闺蜜坊</a></li>
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'add_category' %}">添加化妆包</a> </li>
-            <li><a href="{% url 'restricted' %}">限制页面</a></li>
-            <li><a href="{% url 'auth_logout' %}?next=/rango/">退出我的闺蜜坊</a></li>
-            {% else %}
-            <li><a href="{% url 'auth_login' %}">进入我的闺蜜坊</a> </li>
-            <li><a href="{% url 'registration_register' %}">在这里成为好闺蜜</a> </li>
-        {% endif %}
-    </ul>
-</div>
-</body>
-</html>{% endcomment %}
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load rango_template_tags %}
@@ -91,7 +46,7 @@
           </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'restricted' %}">限制页面</a>
+                    <a class="nav-link" href="{% url 'restricted' %}">只有会员才知道的世界</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'add_category' %}">添加化妆包</a>
@@ -100,9 +55,6 @@
                     <a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">退出我的闺蜜坊</a>
                 </li>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registration_register' %}">在这里成为好闺蜜</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'auth_login' %}">进入我的闺蜜坊</a>
                 </li>

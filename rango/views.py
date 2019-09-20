@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from datetime import datetime
 from rango.models import Category, Page
@@ -17,8 +18,8 @@ def index(request):
                         pages=page_list)
 
     visitor_cookie_handler(request)
-    context_dict['visits']= request.session['visits']
-    context_dict['last_visit']= request.session['last_visit']
+    context_dict['visits'] = request.session['visits']
+    context_dict['last_visit'] = request.session['last_visit']
     response = render(request, 'rango/index.html', context=context_dict)
     return response
 
@@ -37,7 +38,7 @@ def show_category(request, category_name_slug):
         # 检索关联的所有网页
         # 注意，filter() 返回一个网页对象列表或空列表
 
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         # 把得到的列表赋值给模板上下文中名为pages 的键
 
@@ -162,30 +163,48 @@ def add_page(request, category_name_slug):
 
 @login_required
 def restricted(request):
-    return render(request,'rango/restricted.html',{})
+    return render(request, 'rango/restricted.html', {})
 
 
 # def user_logout(request):
 #     logout(request)
 #     return HttpResponseRedirect(reverse('index'))
 
-def get_server_side_cookie(request,cookie,default_val=None):
+def get_server_side_cookie(request, cookie, default_val=None):
     val = request.session.get(cookie)
     if not val:
         val = default_val
     return val
 
-def visitor_cookie_handler(request):
-    visits = int(get_server_side_cookie(request,'visits','1'))
 
-    last_visit_cookie = get_server_side_cookie(request,'last_visit',str(datetime.now()))
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
     last_visit_time = datetime.strptime(last_visit_cookie[:-7],
                                         '%Y-%m-%d %H:%M:%S')
 
-    if (datetime.now()-last_visit_time).seconds>0:
-        visits = visits+1
+    if (datetime.now() - last_visit_time).seconds > 0:
+        visits = visits + 1
         request.session['last_visit'] = str(datetime.now())
     else:
         request.session['last_visit'] = last_visit_cookie
 
     request.session['visits'] = visits
+
+
+def track_url(request):
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+
+    return redirect(url)

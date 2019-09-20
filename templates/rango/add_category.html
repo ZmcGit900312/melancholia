@@ -1,31 +1,24 @@
 {% extends 'rango/base.html' %}
-
+{% load bootstrap_toolkit %}
+{% load staticfiles %}
 {% block title_block %}
     化妆包
 {% endblock %}
 
 {% block body_block %}
-    {% if category %}
-        <form role="form" id="category_form" method="post" action="{% url 'add_category' %}">
-            <h2 class="form-signin-heading">添加新分类
-                <a href="{% url 'add_category' %}">{{ category.name }}</a>
-            </h2>
-            {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}<br/>
-            {{ field }}<br/>
-        {% endfor %}
-        <br/>
-        <button class="btn btn-primary" type="submit" name="添加">
-            添加
-        </button>
-        </form>
-    {% else%}
-        <p>这个分类还不存在</p>
-    {% endif %}
-
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet">
+    <div class="jumbotron">
+        <h1 class="show">添加新分类</h1>
+    </div>
+    <form role='form' id="category_form" method="post" action="{% url 'add_category' %}">
+    {% csrf_token %}
+        <label for="id_name" class="sr-only">名称</label>
+        <input type="text" name="name" maxlength="128" placeholder="请输入新分类名字" class="form-control-lg" required="" id="id_name">
+        <input type="hidden" name="likes" value="0" id="id_likes">
+        <input type="hidden" name="views" value="0" id="id_views">
+        <input type="hidden" name="slug" id="id_slug">
+        <div class="btn-toolbar">
+            <button class="btn btn-lg btn-primary" type="submit" name="submit">添加</button>
+        </div>
+    </form>
 {% endblock %}
