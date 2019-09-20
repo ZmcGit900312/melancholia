@@ -10,15 +10,13 @@
     <div class="jumbotron">
         <h1 class="show">添加新分类</h1>
     </div>
-    <form role='form' id="category_form" method="post" action="{% url 'add_category' %}">
+    <form class="form-signin" role='form' id="category_form" method="post" action="{% url 'add_category' %}">
     {% csrf_token %}
         <label for="id_name" class="sr-only">名称</label>
-        <input type="text" name="name" maxlength="128" placeholder="请输入新分类名字" class="form-control-lg" required="" id="id_name">
+        <input type="text" name="name" maxlength="128" placeholder="请输入新分类名字" class="form-control" required="" id="id_name">
         <input type="hidden" name="likes" value="0" id="id_likes">
         <input type="hidden" name="views" value="0" id="id_views">
         <input type="hidden" name="slug" id="id_slug">
-        <div class="btn-toolbar">
-            <button class="btn btn-lg btn-primary" type="submit" name="submit">添加</button>
-        </div>
+        <button class="btn btn-primary btn-block" type="submit">添加</button>
     </form>
 {% endblock %}

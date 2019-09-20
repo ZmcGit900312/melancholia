@@ -160,6 +160,19 @@ def add_page(request, category_name_slug):
 #     else:
 #         return render(request, 'rango/login.html', {})
 
+@login_required
+def like_category(request):
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+        likes = 0
+        if cat_id:
+            cat = Category.objects.get(id= int(cat_id))
+            if cat:
+                likes= cat.likes+1
+                cat.likes= likes
+                cat.save()
+        return HttpResponse(likes)
+
 
 @login_required
 def restricted(request):

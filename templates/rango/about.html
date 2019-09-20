@@ -1,10 +1,14 @@
 {% extends 'rango/base.html' %}
-
+{% load staticfiles %}
 {% block title_block %}
     靓照
 {% endblock %}
 
 {% block body_block %}
     <h2>一个用于测试的django项目</h2>
+    <button class="btn btn-primary" id="about-btn">点我</button>
+    <p>使用JQuery</p>
+    <div id="msg">另一个示例</div>
     <img src="{{ MEDIA_URL }}niko.jpg" alt="小闺蜜的照片"/>
 {% endblock %}
+

@@ -10,4 +10,5 @@ urlpatterns = [
             views.show_category,name = 'show_category'),
     path('restricted/',views.restricted,name='restricted'),
     path('goto/',views.track_url,name='goto'),
+    path('like/',views.like_category,name='like_category'),
 ]
